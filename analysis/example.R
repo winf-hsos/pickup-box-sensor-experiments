@@ -4,6 +4,28 @@ library(janitor)
 data <- read_csv2("data/smoke_test/2023-11-10_15-34-52.csv") |> 
   clean_names()
 
+sensor_levels <- c(
+  "back_temperature_c",
+  "front_temperature_o_c",
+  "top_temperature_c",
+  "ir_temperature_c",
+  "thermocouple_temperature_c",
+  "outside_temperature_c",
+  "outside_humidity_percent",
+  "inside_humidity_percent"
+)
+
+sensor_labels <- c(
+  "Temperature Sensor (back)",
+  "Temperature Sensor (front)",
+  "Temperature Sensor (top)",
+  "IR Temperature Sensor",
+  "Thermocouple Temperature Sensor",
+  "Temperature Sensor (outside)",
+  "Humidity Sensor (outside)",
+  "Humidity Sensor (inside)"
+)
+
 # Make the data long instead of wide (see "tidy data")
 data <- 
   data |> 
@@ -26,7 +48,9 @@ data <-
                    ),
                names_to = "sensor_name",
                values_to = "value"
-               )
+               ) |> 
+  
+  mutate(sensor_name = factor(sensor_name, levels=sensor_levels, labels=sensor_labels))
 
 # Take a peak at the data
 data |> 
@@ -35,7 +59,14 @@ data |>
 
 data |> 
   # Filter on specific sensors for this plot
-  filter(sensor_name %in% c("ir_temperature_c", "top_temperature_c", "back_temperature_c", "outside_temperature_c")) |> 
+  filter(sensor_name %in% c(
+    "Temperature Sensor (back)",
+    "Temperature Sensor (top)",
+    "Temperature Sensor (front)",
+    "IR Temperature Sensor",
+    "Temperature Sensor (outside)"
+    )) |>
+  drop_na() |> 
 
   # Create a smoothed line plot (regular line is to noisy)  
   ggplot() +

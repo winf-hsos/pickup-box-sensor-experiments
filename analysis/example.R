@@ -72,6 +72,11 @@ data |>
   ggplot() +
   aes(x=time, y = value, color=sensor_name) +
   geom_smooth() +
-  labs(x = "Time", y = "Temperature in °C") +
+  labs(x = "Time", y = "Temperature in °C", color = "Sensor") +
   scale_color_viridis_d() +
+  scale_x_datetime(
+    date_labels = "%d.%m",
+    date_breaks = "1 day"
+  ) +
   theme_bw()
+  

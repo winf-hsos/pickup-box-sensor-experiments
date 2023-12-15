@@ -56,6 +56,8 @@ data <-
 data |> 
   glimpse()
 
+data
+
 
 data |> 
   # Filter on specific sensors for this plot
